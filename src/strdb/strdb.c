@@ -1,7 +1,7 @@
 #include "strdb.h"
 #include <unistd.h>
 
-#define TEST_DEL
+#define TEST_GET
 
 int main(int argc, char *argv[])
 {
@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 #endif
 
 #ifdef TEST_GET
-    char *value = strdb_get(file, 2);
+    char *value = strdb_get(file, 1);
     printf("%s\n", value);
     free(value);
     return 0;
@@ -28,7 +28,14 @@ int main(int argc, char *argv[])
 #endif
 
 #ifdef TEST_DEL
-    int ret = strdb_del(file, 0);
+    int ret = strdb_del(file, 1);
+    printf("%d\n", ret);
+    return 0;
+#endif
+
+#ifdef TEST_SET
+    char value[] = "String Database";
+    int ret = strdb_set(file, 1, value);
     printf("%d\n", ret);
     return 0;
 #endif
@@ -106,10 +113,26 @@ static int strdb_write(str_entry_t *entry, long size, FILE *file, char *value)
             return STR_ERROR;
         }
         if (!fentry)
+        {
+            i += sizeof(str_entry_t) + fentry->length;
             continue;
+        }
         if (fentry->magic == STR_MAGIC)
         {
-            i += fentry->length + sizeof(str_entry_t);
+            // 试图重新使用被删除的项
+            if (fentry->deleted == 1 && fentry->length >= entry->length)
+            {
+                fentry->deleted = 0;
+                fseek(file, i, SEEK_SET);
+                if (fwrite(fentry, sizeof(fentry), 1, file) != 1
+                || fwrite(value, entry->length, 1, file) != 1)
+                {
+                    strdb_entry_destroy(entry, fentry, file, "fwrite error");
+                    return STR_ERROR;
+                }
+                break;
+            }
+            i += sizeof(str_entry_t) + fentry->length;
             index ++;
         } else {
             strdb_entry_destroy(entry, fentry, file, "string entry read error");
@@ -125,6 +148,29 @@ static int strdb_write(str_entry_t *entry, long size, FILE *file, char *value)
         return STR_ERROR;
     }
     strdb_entry_destroy(entry, fentry, file, NULL);
+    return STR_OK;
+}
+
+static int strdb_remove(str_entry_t *fentry, FILE *file, long i)
+{
+    // 清空内容并设置删除标志
+    fseek(file, i + sizeof(str_entry_t), SEEK_SET);
+    char *value = malloc(fentry->length);
+    memset(value, 0, fentry->length);
+    if (fwrite(fentry, fentry->length, 1, file) != 1)
+    {
+        free(value);
+        strdb_entry_destroy(NULL, NULL, file, "fwrite error");
+        return STR_ERROR;
+    }
+    fentry->deleted = 1;
+    fseek(file, i, SEEK_SET);
+    if (fwrite(fentry, sizeof(str_entry_t), 1, file) != 1)
+    {
+        strdb_entry_destroy(NULL, fentry, file, "fwrite error");
+        return STR_ERROR;
+    }
+    free(value);
     return STR_OK;
 }
 
@@ -208,7 +254,9 @@ char* strdb_get(char *path, int id)
             strdb_entry_destroy(NULL, fentry, file, "fread error");
             return NULL;
         }
+        break;
     }
+    strdb_entry_destroy(NULL, fentry, file, NULL);
     return rvalue;
 }
 
@@ -232,24 +280,65 @@ int strdb_del(char *path, int id)
             return STR_ERROR;
         }
         if (fentry->id != id)
-            continue;
-        fseek(file, i, SEEK_SET);
-        long esize = fentry->length + sizeof(str_entry_t);
-        char *value = malloc(esize);
-        memset(value, 0, esize);
-        if (fwrite(value, esize, 1, file) != 1)
         {
-            free(value);
-            strdb_entry_destroy(NULL, fentry, file, "fread error");
-            return STR_ERROR;
+            i += sizeof(str_entry_t) + fentry->length;
+            continue;
         }
+        if (strdb_remove(fentry, file, i) == STR_ERROR)
+            return STR_ERROR;
+        strdb_entry_destroy(NULL, fentry, file, NULL);
         return STR_OK;
     }
     return STR_ERROR;
 }
 
 // 修改字符串
-int strdb_set(char *file, int id, char *value)
+int strdb_set(char *path, int id, char *value)
 {
-    return 0;
+    FILE *file = fopen(path, "r+");
+    if (!file)
+        return STR_ERROR;
+    
+    fseek(file, 0, SEEK_END);
+    long size = ftell(file);
+    long i = 0;
+    str_entry_t *fentry = malloc(sizeof(str_entry_t));
+    while (i < size)
+    {
+        fseek(file, i, SEEK_SET);
+        if (fread(fentry, sizeof(str_entry_t), 1, file) != 1)
+        {
+            strdb_entry_destroy(NULL, fentry, file, "fread error");
+            return STR_ERROR;
+        }
+        if (fentry->id != id)
+        {
+            i += sizeof(str_entry_t) + fentry->length;
+            continue;
+        }
+        // 判断是否能够修改
+        if (fentry->deleted == 0 && strlen(value) <= fentry->length)
+        {
+            char *ovalue = malloc(fentry->length);
+            memset(ovalue, 0, fentry->length);
+            strcpy(ovalue, value);
+            fseek(file, i + sizeof(str_entry_t), SEEK_SET);
+            if (fwrite(ovalue, fentry->length, 1, file) != 1)
+            {
+                free(ovalue);
+                strdb_entry_destroy(NULL, fentry, file, "fread error");
+                return STR_ERROR;
+            }
+            free(ovalue);
+            strdb_entry_destroy(NULL, fentry, file, NULL);
+            return STR_OK;
+        } else {
+            if (strdb_remove(fentry, file, i) == STR_ERROR)
+                return STR_ERROR;
+            fentry->length = strlen(value);
+            return strdb_write(fentry, sizeof(fentry), file, value);
+        }
+    }
+    strdb_entry_destroy(NULL, fentry, file, "update error");
+    return STR_ERROR;
 }
