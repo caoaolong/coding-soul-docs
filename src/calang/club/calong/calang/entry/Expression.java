@@ -6,9 +6,13 @@ public class Expression {
 
     private String name;
 
+    private Integer index;
+
     private Object value;
 
     private DataType dataType;
+
+    private ValueType valueType;
 
     public static Expression UNKNOWN_EXPRESSION = new Expression();
 
@@ -16,10 +20,12 @@ public class Expression {
 
     }
 
-    public Expression(String name, Object value, DataType dataType, ExpressionType type) {
+    public Expression(String name, Integer index, Object value, DataType dataType, ValueType valueType, ExpressionType type) {
         this.name = name;
+        this.index = index;
         this.value = value;
         this.dataType = dataType;
+        this.valueType = valueType;
         this.type = type;
     }
 
@@ -35,7 +41,7 @@ public class Expression {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 
@@ -55,13 +61,27 @@ public class Expression {
         this.type = type;
     }
 
+    public ValueType getValueType() {
+        return valueType;
+    }
+
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
+
     @Override
     public String toString() {
         return "Expression{" +
                 "type=" + type +
                 ", name='" + name + '\'' +
+                ", index=" + index +
                 ", value=" + value +
                 ", dataType=" + dataType +
+                ", valueType=" + valueType +
                 '}';
     }
 }

@@ -1,5 +1,7 @@
 package club.calong.calang.entry;
 
+import club.calong.calang.CalangRunner;
+import club.calong.calang.CalangVm;
 import club.calong.calang.util.Constants;
 import club.calong.calang.util.FunctionsFactory;
 
@@ -12,7 +14,7 @@ public class Block {
 
     private final boolean shortly;
 
-    private final Map<String, Object> variables;
+    private final Map<String, Variable> variables;
 
     private final List<Block> subBlocks;
 
@@ -24,7 +26,7 @@ public class Block {
         return subBlocks;
     }
 
-    public Map<String, Object> getVariables() {
+    public Map<String, Variable> getVariables() {
         return variables;
     }
 
@@ -55,16 +57,21 @@ public class Block {
         if (lines == null || lines.isEmpty())
             return;
         expressions = new LinkedList<>();
-        // TODO: 创建虚拟机
+        // 创建虚拟机
+        CalangVm vm = new CalangVm(1024);
+        // 创建解释器
+        CalangRunner runner = new CalangRunner(vm, variables);
+
         for (String line : lines) {
             // 解析表达式
             Expression expression = createExpression(line);
             expressions.add(expression);
-            // TODO: 计算表达式
+            // 翻译表达式
+            runner.translate(expression);
         }
 
-        for (Expression expression : expressions) {
-            System.out.println(expression);
+        for (Expression exp : expressions) {
+            System.out.println(exp);
         }
     }
 
@@ -82,6 +89,34 @@ public class Block {
                 return DataType.FLOAT;
             default:
                 return DataType.UNKNOWN;
+        }
+    }
+
+    public ValueType getValueType(DataType dataType, String value) {
+
+        switch (dataType) {
+            case INT: {
+                try {
+                    Integer.parseInt(value);
+                    return ValueType.VALUE;
+                } catch (NumberFormatException e) {
+                    return ValueType.EXPRESSION;
+                }
+            }
+            case STRING: {
+                return Constants.STRING_PATTERN.matcher(value).matches() ?
+                        ValueType.VALUE : ValueType.EXPRESSION;
+            }
+            case FLOAT: {
+                try {
+                    Float.parseFloat(value);
+                    return ValueType.VALUE;
+                } catch (NumberFormatException e) {
+                    return ValueType.EXPRESSION;
+                }
+            }
+            default:
+                return ValueType.UNKNOWN;
         }
     }
 
@@ -107,15 +142,22 @@ public class Block {
         String[] trim = line.trim().split("\\s+");
         ExpressionType expressionType = getExpressionType(line);
         if (expressionType == ExpressionType.VAR){
-            StringBuffer buffer = new StringBuffer();
+            StringBuffer value = new StringBuffer();
             for (int i = 3; i < trim.length; i++) {
-                buffer.append(trim[i]);
+                value.append(trim[i]).append("#");
             }
-            return new Expression(trim[1], buffer, getDataType(trim[0]), ExpressionType.VAR);
+            int length = value.length();
+            value.delete(length - 1, length);
+            Variable variable = new Variable(trim[1], variables.size(), value);
+            variables.put(trim[1], variable);
+            DataType dataType = getDataType(trim[0]);
+            return new Expression(variable.getName(), variable.getIndex(), value,
+                    dataType, getValueType(dataType, value.toString()), ExpressionType.VAR);
         } else if (expressionType == ExpressionType.FUNC) {
             String functionName = trim[0].substring(0, trim[0].indexOf('(')).trim();
             Function function = functionsFactory.getFunction(functionName);
-            return new Expression(functionName, function, function.getRetType(), ExpressionType.FUNC);
+            return new Expression(functionName, -1, function,
+                    function.getRetType(), ValueType.VALUE, ExpressionType.FUNC);
         }
         else
             return Expression.UNKNOWN_EXPRESSION;
