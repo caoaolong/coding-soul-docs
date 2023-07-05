@@ -4,7 +4,9 @@ import java.util.regex.Pattern;
 
 public interface Constants {
 
-    Pattern FUNCTION_PATTERN = Pattern.compile("^[A-Za-z_]\\w+\\(.*\\)");
+    Pattern FUNCTION_PATTERN = Pattern.compile("^[A-Za-z_]\\w*\\(.*\\)");
+
+    Pattern VARIABLE_PATTERN = Pattern.compile("^[A-Za-z_]\\w*");
 
     Pattern STRING_PATTERN = Pattern.compile("^\"[^\"]*\"$");
 

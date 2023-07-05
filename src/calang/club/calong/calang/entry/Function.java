@@ -1,5 +1,6 @@
 package club.calong.calang.entry;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 
 public class Function {
@@ -10,7 +11,29 @@ public class Function {
 
     private DataType[] argTypes;
 
+    private String[] values;
+
     private DataType retType;
+
+    private Method method;
+
+    private boolean variable;
+
+    public void setMethod(Method method) {
+        this.method = method;
+    }
+
+    public Method getMethod() {
+        return method;
+    }
+
+    public void setVariable(boolean variable) {
+        this.variable = variable;
+    }
+
+    public boolean isVariable() {
+        return variable;
+    }
 
     public Function(String name, Integer nArgs, DataType[] argTypes, DataType retType) {
         this.name = name;
@@ -51,12 +74,21 @@ public class Function {
         this.retType = retType;
     }
 
+    public void setValues(String[] values) {
+        this.values = values;
+    }
+
+    public String[] getValues() {
+        return values;
+    }
+
     @Override
     public String toString() {
         return "Function{" +
                 "name='" + name + '\'' +
                 ", nArgs=" + nArgs +
                 ", argTypes=" + Arrays.toString(argTypes) +
+                ", values=" + Arrays.toString(values) +
                 ", retType=" + retType +
                 '}';
     }

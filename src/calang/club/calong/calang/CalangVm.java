@@ -1,12 +1,9 @@
 package club.calong.calang;
 
-import club.calong.Variable;
+import club.calong.calang.entry.Variable;
 import club.calong.calang.util.Commands;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
 public class CalangVm {
 
@@ -15,10 +12,11 @@ public class CalangVm {
     private int ebp, esp;
 
     /**
-     * eax: 存储返回值
-     * ebx, edx: 存储临时变量的索引
+     * register[0]: eax: 存储返回值
+     * register[1, 3]: ebx, edx: 存储临时变量的索引
+     * register[2]: ecx
      */
-    public int eax, ebx, ecx, edx;
+    public int[] register = {0, 0, 0, 0};
 
     private int eflags;
 
@@ -26,10 +24,20 @@ public class CalangVm {
 
     private final ArrayList<Object> heap;
 
+    private Map<Integer, Integer> constants;
+
+    public Map<Integer, Integer> getConstants() {
+        return constants;
+    }
+
+    public void setConstants(Map<Integer, Integer> constants) {
+        this.constants = constants;
+    }
+
     public CalangVm(int heapSize) {
 
         eip = 0;
-        eax = ebx = ecx = edx = 1;
+        Arrays.fill(register, 1);
         stack = new Stack<>();
         heap = new ArrayList<>(heapSize);
     }
@@ -82,63 +90,131 @@ public class CalangVm {
 
     private void exec(Integer command) {
 
+        int index = (command & 0x0000FF00) >> 8;
+        int reg1 = (command & 0x00FF0000) >> 16;
+        int reg2 = command >> 24;
         switch (command & 0x000000FF) {
             case Commands.PUSH:
-                cmdPush(command);
+                cmdPush(index, reg1, reg2);
+                break;
+            case Commands.POP:
+                cmdPop(index, reg1, reg2);
                 break;
             case Commands.MOV:
-                cmdMov(command);
+                cmdMov(index, reg1, reg2);
                 break;
             case Commands.ADD:
-                cmdAdd(command);
+                cmdAdd(index, reg1, reg2);
                 break;
             case Commands.SUB:
-                cmdSub(command);
+                cmdSub(index, reg1, reg2);
                 break;
             case Commands.MUL:
-                cmdMul(command);
+                cmdMul(index, reg1, reg2);
                 break;
             case Commands.DIV:
-                cmdDiv(command);
+                cmdDiv(index, reg1, reg2);
                 break;
             case Commands.SUR:
-                cmdSur(command);
+                cmdSur(index, reg1, reg2);
                 break;
         }
     }
 
-    private void cmdPush(Integer command) {
+    private void cmdPush(Integer index, Integer reg1, Integer reg2) {
 
+        if (index != 0xFF) {
+            stack.push(constants.get(index));
+            return;
+        }
 
+        if (reg1 != 0xFF) {
+            stack.push(register[reg1]);
+        }
     }
 
-    private void cmdMov(Integer command) {
+    private void cmdPop(Integer index, Integer reg1, Integer reg2) {
 
-
+        if (reg1 != 0xFF) {
+            register[reg1] = stack.pop();
+        }
     }
 
-    private void cmdAdd(Integer command) {
+    private void cmdMov(Integer index, Integer reg1, Integer reg2) {
 
+        if (index != 0xFF && reg1 != 0xFF) {
+            register[reg1] = constants.get(index);
+            return;
+        }
 
+        if (reg1 != 0xFF && reg2 != 0xFF) {
+            register[reg2] = constants.get(register[reg1]);
+        }
     }
 
-    private void cmdSub(Integer command) {
+    private void cmdAdd(Integer index, Integer reg1, Integer reg2) {
 
+        if (index != 0xFF && reg1 != 0xFF) {
+            register[reg1] += constants.get(index);
+            return;
+        }
 
+        if (reg1 != 0xFF && reg2 != 0xFF) {
+            register[reg1] += register[reg2];
+        }
     }
 
-    private void cmdMul(Integer command) {
+    private void cmdSub(Integer index, Integer reg1, Integer reg2) {
 
+        if (index != 0xFF && reg1 != 0xFF) {
+            register[reg1] -= constants.get(index);
+            return;
+        }
 
+        if (reg1 != 0xFF && reg2 != 0xFF) {
+            register[reg1] -= register[reg2];
+        }
     }
 
-    private void cmdDiv(Integer command) {
+    private void cmdMul(Integer index, Integer reg1, Integer reg2) {
 
+        if (index != 0xFF && reg1 != 0xFF) {
+            register[reg1] *= constants.get(index);
+            return;
+        }
 
+        if (reg1 != 0xFF && reg2 != 0xFF) {
+            register[reg1] *= register[reg2];
+        }
     }
 
-    private void cmdSur(Integer command) {
+    private void cmdDiv(Integer index, Integer reg1, Integer reg2) {
 
+        if (index != 0xFF && reg1 != 0xFF) {
+            register[reg1] /= constants.get(index);
+            return;
+        }
 
+        if (reg1 != 0xFF && reg2 != 0xFF) {
+            register[reg1] /= register[reg2];
+        }
+    }
+
+    private void cmdSur(Integer index, Integer reg1, Integer reg2) {
+
+        if (index != 0xFF && reg1 != 0xFF) {
+            register[reg1] %= constants.get(index);
+            return;
+        }
+
+        if (reg1 != 0xFF && reg2 != 0xFF) {
+            register[reg1] %= register[reg2];
+        }
+    }
+
+    public void cleanVariables(Map<String, Variable> variables) {
+
+        variables.clear();
+        constants.clear();
     }
 }

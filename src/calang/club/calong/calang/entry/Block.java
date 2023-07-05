@@ -69,10 +69,7 @@ public class Block {
             // 翻译表达式
             runner.translate(expression);
         }
-
-        for (Expression exp : expressions) {
-            System.out.println(exp);
-        }
+        vm.cleanVariables(variables);
     }
 
     public DataType getDataType(String type) {
@@ -155,9 +152,16 @@ public class Block {
                     dataType, getValueType(dataType, value.toString()), ExpressionType.VAR);
         } else if (expressionType == ExpressionType.FUNC) {
             String functionName = trim[0].substring(0, trim[0].indexOf('(')).trim();
+            String functionValue = trim[0].substring(trim[0].indexOf('(') + 1, trim[0].indexOf(')'));
+            ValueType valueType = Constants.STRING_PATTERN.matcher(functionValue).matches() ?
+                    ValueType.VALUE : ValueType.EXPRESSION;
             Function function = functionsFactory.getFunction(functionName);
+            String[] values = functionValue.split(",");
+            for (int i = 0; i < values.length; i++)
+                values[i] = values[i].trim();
+            function.setValues(values);
             return new Expression(functionName, -1, function,
-                    function.getRetType(), ValueType.VALUE, ExpressionType.FUNC);
+                    function.getRetType(), valueType, ExpressionType.FUNC);
         }
         else
             return Expression.UNKNOWN_EXPRESSION;

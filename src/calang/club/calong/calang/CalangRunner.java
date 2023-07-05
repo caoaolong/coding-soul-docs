@@ -1,9 +1,11 @@
 package club.calong.calang;
 
 import club.calong.calang.entry.Expression;
+import club.calong.calang.entry.Function;
 import club.calong.calang.entry.Variable;
 import club.calong.calang.util.Commands;
 import club.calong.calang.util.Constants;
+import club.calong.calang.util.FunctionsFactory;
 
 import java.util.*;
 
@@ -34,6 +36,7 @@ public class CalangRunner {
         constants = new HashMap<>();
         commands = new LinkedList<>();
         this.variables = variables;
+        vm.setConstants(constants);
     }
 
     public void translate(Expression expression) {
@@ -44,11 +47,11 @@ public class CalangRunner {
                     case VAR: {
                         constants.put(expression.getIndex(),
                                 Integer.parseInt(expression.getValue().toString()));
-                        commands.add(Commands.PUSH | expression.getIndex() << 8 | 0xFFFF0000);
+                        vm.stackPush(getVariableValue(expression.getName()));
                         break;
                     }
                     case FUNC: {
-                        // TODO: 执行函数
+
                     }
                 }
                 break;
@@ -57,12 +60,13 @@ public class CalangRunner {
                 switch (expression.getType()) {
                     case VAR: {
                         parseExpression(expression.getValue().toString());
-                        constants.put(expression.getIndex(), vm.eax);
-                        commands.add(Commands.PUSH | expression.getIndex() << 8 | 0xFFFF0000);
+                        variables.get(expression.getName()).setValue(vm.register[Constants.EAX_IDX]);
+                        constants.put(expression.getIndex(), vm.register[Constants.EAX_IDX]);
+                        commands.add(Commands.PUSH | Constants.EAX_IDX << 16 | 0xFF00FF00);
                         break;
                     }
                     case FUNC: {
-                        // TODO: 执行函数
+                        parseFunction(expression);
                     }
                 }
                 break;
@@ -70,6 +74,20 @@ public class CalangRunner {
         }
         // 运行指令
         vm.run(commands);
+    }
+
+    private void parseFunction(Expression expression) {
+
+        Function function = (Function) expression.getValue();
+        if (function.getValues().length >= function.getnArgs()) {
+            String[] values = function.getValues();
+            for (int i = 0; i < values.length; i++) {
+                parseExpression(values[i]);
+                values[i] = String.valueOf(vm.stackPop());
+            }
+        }
+        FunctionsFactory functionsFactory = FunctionsFactory.getInstance();
+        functionsFactory.run(function);
     }
 
     private void parseExpression(String value) {
@@ -89,15 +107,13 @@ public class CalangRunner {
                     pushSymbol(symbols, entry);
                     break;
                 default:
-                    vm.stackPush(getVariableIndex(entry));
+                    vm.stackPush(getVariableValue(entry));
                     break;
             }
         }
         while (!symbols.isEmpty()) {
             calc(symbols.pop());
         }
-        System.out.println(vm.getStack());
-        System.out.println(symbols);
     }
 
     private static final Map<String, Integer> symbolOrder = new HashMap<String, Integer>(){{
@@ -132,43 +148,39 @@ public class CalangRunner {
 
     public void calc(String symbol) {
 
-        commands.add(Commands.POP | Constants.EBX_IDX << 16 | 0xFF00FF00);
-        commands.add(Commands.POP | Constants.EBX_IDX << 16 | 0xFF00FF00);
+        commands.add(Commands.POP | Constants.EAX_IDX << 16 | 0xFF00FF00);
+        commands.add(Commands.POP | Constants.EDX_IDX << 16 | 0xFF00FF00);
+        vm.run(commands);
         switch (symbol) {
             case "+":
-                commands.add(Commands.MOV | vm.edx << 8 | Constants.EAX_IDX << 16 | 0xFF000000);
-                commands.add(Commands.ADD | vm.ebx << 8 | 0xFFFF0000);
-                commands.add(Commands.PUSH | Constants.EAX_IDX << 16 | 0xFF00FF00);
+                commands.add(Commands.ADD | Constants.EAX_IDX << 16 | Constants.EDX_IDX << 24 | 0x0000FF00);
                 break;
             case "-":
-                commands.add(Commands.MOV | vm.edx << 8 | Constants.EAX_IDX << 16 | 0xFF000000);
-                commands.add(Commands.SUB | vm.ebx << 8 | 0xFFFF0000);
-                commands.add(Commands.PUSH | Constants.EAX_IDX << 16 | 0xFF000000);
+                commands.add(Commands.SUB | Constants.EAX_IDX << 16 | Constants.EDX_IDX | 0x0000FF00);
                 break;
             case "*":
-                commands.add(Commands.MOV | vm.edx << 8 | Constants.EAX_IDX << 16 | 0xFF000000);
-                commands.add(Commands.MUL | vm.ebx << 8 | 0xFFFF0000);
-                commands.add(Commands.PUSH | Constants.EAX_IDX << 16 | 0xFF000000);
+                commands.add(Commands.MUL | Constants.EAX_IDX << 16 | Constants.EDX_IDX << 24 | 0x0000FF00);
                 break;
             case "/":
-                commands.add(Commands.MOV | vm.edx << 8 | Constants.EAX_IDX << 16 | 0xFF000000);
-                commands.add(Commands.DIV | vm.ebx << 8 | 0xFFFF0000);
-                commands.add(Commands.PUSH | Constants.EAX_IDX << 16 | 0xFF000000);
+                commands.add(Commands.DIV | Constants.EAX_IDX << 16 | Constants.EDX_IDX << 24 | 0x0000FF00);
                 break;
             case "%":
-                commands.add(Commands.MOV | vm.edx << 8 | Constants.EAX_IDX << 16 | 0xFF000000);
-                commands.add(Commands.SUR | vm.ebx << 8 | 0xFFFF0000);
-                commands.add(Commands.PUSH | Constants.EAX_IDX << 16 | 0xFF000000);
+                commands.add(Commands.SUR | Constants.EAX_IDX << 16 | Constants.EDX_IDX << 16 | 0xFFFF0000);
                 break;
         }
+        commands.add(Commands.PUSH | Constants.EAX_IDX << 16 | 0xFF00FF00);
+        vm.run(commands);
     }
 
-    public Integer getVariableIndex(String name) {
+    public Integer getVariableValue(String name) {
 
-        Variable variable = variables.get(name);
-        if (variable == null) {
-            throw new RuntimeException("变量未定义");
-        }
-        return variable.getIndex();
+        if (Constants.VARIABLE_PATTERN.matcher(name).matches()) {
+            Variable variable = variables.get(name);
+            if (variable == null) {
+                throw new RuntimeException("变量未定义");
+            }
+            return Integer.parseInt(variable.getValue().toString());
+        } else
+            return Integer.parseInt(name);
     }
 }
