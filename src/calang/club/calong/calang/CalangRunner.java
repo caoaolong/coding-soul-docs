@@ -62,7 +62,6 @@ public class CalangRunner {
                         parseExpression(expression.getValue().toString());
                         variables.get(expression.getName()).setValue(vm.register[Constants.EAX_IDX]);
                         constants.put(expression.getIndex(), vm.register[Constants.EAX_IDX]);
-                        commands.add(Commands.PUSH | Constants.EAX_IDX << 16 | 0xFF00FF00);
                         break;
                     }
                     case FUNC: {
