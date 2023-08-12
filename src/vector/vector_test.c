@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 
     printf("--- Next ---\n");
 
-    // 倒序遍历（最不安全）
+    // 正向遍历（最不安全）
     e = vector_data_ptr(vec);
     while (e) {
         if (e->value <= 0)
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
     } while (true);
 
     // 删除元素
-    vector_set_peek_pointer_end(vec);
+    vector_set_peek_pointer(vec, 0);
     do {
         e = vector_peek(vec);
         if (!e)
@@ -74,9 +74,19 @@ int main(int argc, char *argv[])
     vector_set_peek_pointer(vec, 0);
     do {
         // 错误用法: vector_peek(vec) + vector_pop(vec);
-        e = vector_peek_no_increment(vec);
-        if (!e) 
+        if (vector_count(vec) == 0) 
             break;
+        e = vector_peek_no_increment(vec);
+        printf("pop: entry(value = %d)\tcount = %d\n", e->value, vector_count(vec));
+        vector_pop_at(vec, 0);
+    } while (true);
+
+    // 删除元素
+    do {
+        // 错误用法: vector_peek(vec) + vector_pop(vec);
+        if (vector_count(vec) == 0) 
+            break;
+        e = vector_back(vec);
         printf("pop: entry(value = %d)\tcount = %d\n", e->value, vector_count(vec));
         vector_pop(vec);
     } while (true);
