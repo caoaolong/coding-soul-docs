@@ -1,6 +1,10 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.17 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.17" pages="2">
   <diagram name="虚拟内存" id="kcrXX2a59Rj-RcSPHwbT">
+<<<<<<< HEAD
     <mxGraphModel dx="819" dy="478" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+=======
+    <mxGraphModel dx="1050" dy="621" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+>>>>>>> acdc0e18e14d2d6ebd2098eeccb6817bf838a03c
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -356,13 +360,21 @@
         <mxCell id="IbKQ7ag2hueVyIo12gT1-110" value="虚拟内存" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="239" y="720" width="90" height="18.33333333333334" as="geometry" />
         </mxCell>
+<<<<<<< HEAD
         <mxCell id="IbKQ7ag2hueVyIo12gT1-111" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;fillColor=#60a917;strokeColor=#2D7600;entryX=0.163;entryY=0.021;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" edge="1" target="IbKQ7ag2hueVyIo12gT1-113">
+=======
+        <mxCell id="IbKQ7ag2hueVyIo12gT1-111" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;fillColor=#60a917;strokeColor=#2D7600;" parent="1" edge="1">
+>>>>>>> acdc0e18e14d2d6ebd2098eeccb6817bf838a03c
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="430" y="610" as="sourcePoint" />
             <mxPoint x="400" y="610" as="targetPoint" />
           </mxGeometry>
         </mxCell>
+<<<<<<< HEAD
         <mxCell id="IbKQ7ag2hueVyIo12gT1-112" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;fillColor=#0050ef;strokeColor=#001DBC;entryX=0.055;entryY=1.029;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" edge="1" target="IbKQ7ag2hueVyIo12gT1-113">
+=======
+        <mxCell id="IbKQ7ag2hueVyIo12gT1-112" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;fillColor=#0050ef;strokeColor=#001DBC;" parent="1" edge="1">
+>>>>>>> acdc0e18e14d2d6ebd2098eeccb6817bf838a03c
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="440" y="780" as="sourcePoint" />
             <mxPoint x="400" y="800" as="targetPoint" />
