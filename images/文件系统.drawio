@@ -1,4 +1,4 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.17 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.17">
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.17 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.17" pages="2">
   <diagram name="结构" id="R817mKNGPD3xJAI8k5R9">
     <mxGraphModel dx="819" dy="478" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -70,6 +70,73 @@
         </mxCell>
         <mxCell id="LZS9aE0rRGk5ix384LOB-18" value="Disk partitioning (NTFS)" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#182E3E;strokeColor=#FFFFFF;fontColor=#FFFFFF;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;" parent="1" vertex="1">
           <mxGeometry x="410" y="370" width="160" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="UVaelw9ofY5bqeAjM044" name="FAT16结构">
+    <mxGraphModel dx="1050" dy="621" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="wAjQezdasq0cNaxAxzNu-6" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="194" y="80" width="440" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="wAjQezdasq0cNaxAxzNu-1" value="Boot Sector" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="wAjQezdasq0cNaxAxzNu-6">
+          <mxGeometry width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="wAjQezdasq0cNaxAxzNu-2" value="FAT 1" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="wAjQezdasq0cNaxAxzNu-6">
+          <mxGeometry x="80" width="40" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="wAjQezdasq0cNaxAxzNu-3" value="FAT 2" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="wAjQezdasq0cNaxAxzNu-6">
+          <mxGeometry x="120" width="40" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="wAjQezdasq0cNaxAxzNu-4" value="Root Directory" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="wAjQezdasq0cNaxAxzNu-6">
+          <mxGeometry x="160" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="wAjQezdasq0cNaxAxzNu-5" value="Data Area" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="wAjQezdasq0cNaxAxzNu-6">
+          <mxGeometry x="280" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="wAjQezdasq0cNaxAxzNu-9" value="Directory Entry" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;fontFamily=Courier New;fillColor=#d80073;fontColor=#ffffff;strokeColor=#A50040;" vertex="1" parent="1">
+          <mxGeometry x="40" y="170" width="300" height="386" as="geometry">
+            <mxRectangle x="80" y="160" width="60" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wAjQezdasq0cNaxAxzNu-10" value="File Name&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; 8 + 3 bytes" style="text;strokeColor=#99004D;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;fontFamily=Courier New;" vertex="1" parent="wAjQezdasq0cNaxAxzNu-9">
+          <mxGeometry y="26" width="300" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="wAjQezdasq0cNaxAxzNu-11" value="Attributes&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;1 byte" style="text;strokeColor=#99004D;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;fontFamily=Courier New;" vertex="1" parent="wAjQezdasq0cNaxAxzNu-9">
+          <mxGeometry y="56" width="300" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="wAjQezdasq0cNaxAxzNu-12" value="Reserved for WinNT&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;1 byte" style="text;strokeColor=#99004D;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;fontFamily=Courier New;" vertex="1" parent="wAjQezdasq0cNaxAxzNu-9">
+          <mxGeometry y="86" width="300" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="wAjQezdasq0cNaxAxzNu-13" value="Creation Time(1/1000s)&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;1 byte" style="text;strokeColor=#99004D;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;fontFamily=Courier New;" vertex="1" parent="wAjQezdasq0cNaxAxzNu-9">
+          <mxGeometry y="116" width="300" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="wAjQezdasq0cNaxAxzNu-14" value="Creation Time(H,m,s)&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;2 byte" style="text;strokeColor=#99004D;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;fontFamily=Courier New;" vertex="1" parent="wAjQezdasq0cNaxAxzNu-9">
+          <mxGeometry y="146" width="300" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="wAjQezdasq0cNaxAxzNu-15" value="Creation Time(Y,M,D)&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;2 byte" style="text;strokeColor=#99004D;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;fontFamily=Courier New;" vertex="1" parent="wAjQezdasq0cNaxAxzNu-9">
+          <mxGeometry y="176" width="300" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="wAjQezdasq0cNaxAxzNu-16" value="Last Accessed Date(Y,M,D)&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; 2 byte" style="text;strokeColor=#99004D;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;fontFamily=Courier New;" vertex="1" parent="wAjQezdasq0cNaxAxzNu-9">
+          <mxGeometry y="206" width="300" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="wAjQezdasq0cNaxAxzNu-17" value="Hi16 for Cluster&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;2 byte" style="text;strokeColor=#99004D;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;fontFamily=Courier New;" vertex="1" parent="wAjQezdasq0cNaxAxzNu-9">
+          <mxGeometry y="236" width="300" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="wAjQezdasq0cNaxAxzNu-18" value="Last Modification Time&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;2 byte" style="text;strokeColor=#99004D;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;fontFamily=Courier New;" vertex="1" parent="wAjQezdasq0cNaxAxzNu-9">
+          <mxGeometry y="266" width="300" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="wAjQezdasq0cNaxAxzNu-19" value="Last Modification Date&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;2 byte" style="text;strokeColor=#99004D;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;fontFamily=Courier New;" vertex="1" parent="wAjQezdasq0cNaxAxzNu-9">
+          <mxGeometry y="296" width="300" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="wAjQezdasq0cNaxAxzNu-20" value="Lo16 for Cluster&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;2 byte" style="text;strokeColor=#99004D;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;fontFamily=Courier New;" vertex="1" parent="wAjQezdasq0cNaxAxzNu-9">
+          <mxGeometry y="326" width="300" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="wAjQezdasq0cNaxAxzNu-21" value="File Size in bytes&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;4 byte" style="text;strokeColor=#99004D;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;fontFamily=Courier New;" vertex="1" parent="wAjQezdasq0cNaxAxzNu-9">
+          <mxGeometry y="356" width="300" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
