@@ -1,4 +1,4 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.17 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.17" pages="5">
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.0.9 Chrome/128.0.6613.186 Electron/32.2.5 Safari/537.36" version="26.0.9" pages="6">
   <diagram name="虚拟内存" id="kcrXX2a59Rj-RcSPHwbT">
     <mxGraphModel dx="1050" dy="621" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -1684,6 +1684,41 @@
         </mxCell>
         <mxCell id="CBEQ6D1oWAcKs2kqTUA8-151" value="&lt;p style=&quot;line-height: 200%;&quot;&gt;映射一个完整的&lt;b&gt;&lt;u&gt;4G虚拟内存空间&lt;/u&gt;&lt;/b&gt;需要&lt;b&gt;&lt;u&gt;1024个PDE&lt;/u&gt;&lt;/b&gt;，也就是4K空间，每个PDE需要包含&lt;b&gt;&lt;u&gt;1024个PTE&lt;/u&gt;&lt;/b&gt;（&lt;span style=&quot;background-color: initial;&quot;&gt;每个PTE所占用空间也4Byte&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;）也是4K空间，因此需要使用 &lt;b&gt;&lt;u&gt;4MB+4KB&lt;/u&gt;&lt;/b&gt; 的空间&lt;/span&gt;&lt;/p&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;size=12;fillColor=#f0a30a;fontColor=#000000;strokeColor=#BD7000;spacingLeft=8;spacingRight=8;" vertex="1" parent="1">
           <mxGeometry x="494" y="940" width="290" height="160" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="_wx_gKd6rz0116O3_UGh" name="第 6 页">
+    <mxGraphModel dx="420" dy="248" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="h51lKQAJAkdPmyPpd_58-1" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="200" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="h51lKQAJAkdPmyPpd_58-2" value="0x4FF02000&lt;div&gt;eheap&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="160" y="280" width="80" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="h51lKQAJAkdPmyPpd_58-3" value="malloc(100)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Courier New;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="369" y="135" width="90" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="h51lKQAJAkdPmyPpd_58-4" value="block_t" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="200" width="70" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="h51lKQAJAkdPmyPpd_58-5" value="0x4FF02000 + sizeof(block_t)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="170" y="130" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="h51lKQAJAkdPmyPpd_58-6" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.506;exitY=-0.093;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="h51lKQAJAkdPmyPpd_58-2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="150" y="290" as="sourcePoint" />
+            <mxPoint x="200" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="h51lKQAJAkdPmyPpd_58-7" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="270" y="160" as="sourcePoint" />
+            <mxPoint x="269.8" y="200" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
