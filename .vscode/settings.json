@@ -3,5 +3,10 @@
     "files.associations": {
         "stdio.h": "c",
         "vector.h": "c"
-    }
+		},
+		"slidev.include": [
+			"**/slides.md",
+			"slidev/GodotExample/ch01.md",
+			"slidev/GodotExample/ch02.md"
+		]
 }
